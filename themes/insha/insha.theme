@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Implements template_preprocess_breadcrumb.
+ */
+function insha_preprocess_breadcrumb(&$variables) {
+	$request = \Drupal::request();
+	$route_match = \Drupal::routeMatch();
+	// Get current page title.
+	$title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+	// Add current page title at the end of the breadcrumb trail.
+	$variables['breadcrumb'][] = array(
+		'text' => $title,
+	);
+}
+
+/**
+ * Implements template_preprocess_menu__account.
+ */
+function insha_preprocess_menu__account(&$variables) {
+	// Add adminimal class to the body.
+	$items = $variables['items'];
+	foreach ($items as $item) {
+		$internal_path = $item['url']->getInternalPath();
+		if ($internal_path == 'user') {
+			// If current path is 'user' set class for adding icon.
+			$item['attributes']['class'] .= ' secondary_nav_account';
+		}
+		elseif ($internal_path == 'user/logout') {
+			// If current path is 'user/logout' set class for adding icon.
+			$item['attributes']['class'] .= ' secondary_nav_logout';
+		}
+	}
+}

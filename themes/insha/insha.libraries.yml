@@ -1,0 +1,9 @@
+global-styling:
+  version: VERSION
+  css:
+    component:
+      css/components/icon-font.css: {}
+    layout:
+      css/layout/layout.css: {}
+    state:
+      css/state/responsive.css: {}

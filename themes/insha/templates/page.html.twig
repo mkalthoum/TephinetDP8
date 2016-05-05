@@ -1,0 +1,235 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a single Drupal page.
+ *
+ * The doctype, html, head, and body tags are not in this template. Instead
+ * they can be found in the html.html.twig template normally located in the
+ * core/modules/system directory.
+ *
+ * Available variables:
+ *
+ * General utility variables:
+ * - base_path: The base URL path of the Drupal installation. Will usually be
+ *   "/" unless you have installed Drupal in a sub-directory.
+ * - is_front: A flag indicating if the current page is the front page.
+ * - logged_in: A flag indicating if the user is registered and signed in.
+ * - is_admin: A flag indicating if the user has permission to access
+ *   administration pages.
+ *
+ * Site identity:
+ * - front_page: The URL of the front page. Use this instead of base_path when
+ *   linking to the front page. This includes the language domain or prefix.
+ * - logo: The url of the logo image, as defined in theme settings.
+ * - site_name: The name of the site. This is empty when displaying the site
+ *   name has been disabled in the theme settings.
+ * - site_slogan: The slogan of the site. This is empty when displaying the site
+ *   slogan has been disabled in theme settings.
+ *
+ * Page content (in order of occurrence in the default page.html.twig):
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title: The page title, for use in the actual content.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - tabs: Tabs linking to any sub-pages beneath the current page (e.g., the
+ *   view and edit tabs when displaying a node).
+ * - action_links: Actions local to the page, such as "Add menu" on the menu
+ *   administration interface.
+ * - node: Fully loaded node, if there is an automatically-loaded node
+ *   associated with the page and the node ID is the second argument in the
+ *   page's path (e.g. node/12345 and node/12345/revisions, but not
+ *   comment/reply/12345).
+ *
+ * Regions:
+ * - page.header: Items for the header region.
+ * - page.help: Dynamic help text, mostly for admin pages.
+ * - page.highlighted: Items for the highlighted content region.
+ * - page.featured: Items for the featured region.
+ * - page.content: The main content of the current page.
+ * - page.sidebar: Items for the sidebar.
+ * - page.footer_firstcolumn: Items for the first footer column.
+ * - page.footer_secondcolumn: Items for the second footer column.
+ * - page.footer_thirdcolumn: Items for the third footer column.
+ * - page.footer_fourthcolumn: Items for the fourth footer column.
+ * - page.footer: Items for the footer region.
+
+ *
+ * @see template_preprocess_page()
+ * @see insha_preprocess_page()
+ * @see html.html.twig
+ */
+#}
+<div id="page-wrapper">
+  <div id="page">
+    <header id="header" class="header" role="banner" aria-label="{{ 'Site header'|t}}">
+      <div class="section layout-container clearfix">
+        {% if logo %}
+          <a class="floatl" href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
+            <img src="{{ logo }}" alt="{{ 'Home'|t }}" />
+          </a>
+        {% endif %}
+        {% if site_name or site_slogan %}
+          <div id="name-and-slogan"{% if hide_site_name and hide_site_slogan %} class="visually-hidden displayinb floatl"{% endif %}>
+            {% if site_name %}
+              {% if title %}
+                <h1 id="site-name"{% if hide_site_name %} class="visually-hidden"{% endif %}>
+                  <strong>
+                    <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+                  </strong>
+                </h1>
+              {# Use h1 when the content title is empty #}
+              {% else %}
+                <h1 id="site-name"{% if hide_site_name %} class="visually-hidden" {% endif %}>
+                  <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+                </h1>
+              {% endif %}
+            {% endif %}
+            {% if site_slogan %}
+              <div id="site-slogan"{% if hide_site_slogan %} class="visually-hidden"{% endif %}>
+                {{ site_slogan }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if page.secondary_menu %}
+          <div id="secondary-menu" class="navigation displayinb floatr margintop1">
+            {{ page.secondary_menu }}
+          </div>
+        {% endif %}
+        {% if page.messages %}
+          <div id="messages" class="width100 floatl displayinb bottom-buffer top-buffer">
+            <div class="section clearfix">
+              {{ page.messages }}
+            </div>
+          </div>
+        {% endif %}
+        {% if header %}
+          {{ page.header }}
+        {% endif %}
+        {% if page.primary_menu %}
+          <div id="main-menu" class="navigation floatl displayinb width100 bottom-buffer">
+            {{ page.primary_menu }}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if page.featured %}
+      <div id="featured"><div class="section clearfix">
+          {{ page.featured }}
+      </div></div><!-- /.section, /#featured -->
+    {% endif %}
+
+    <div id="main-wrapper" class="layout-main-wrapper layout-container clearfix">
+      <div id="main" class="layout-main clearfix">
+
+        {# {% if page.breadcrumb %}
+          <div id="breadcrumb">
+            {{ page.breadcrumb }}
+          </div>
+        {% endif %} #}
+
+        {% if page.sidebar %}
+
+          <div id="sidebar" class="column sidebar floatl width30">
+            <div class="section">
+              {{ page.sidebar }}
+            </div>
+          </div><!-- /#sidebar -->
+
+          {% if page.help %}
+            <div class="help-wrapper displayinb width68 floatr">
+              {{ page.help }}
+            </div>
+          {% endif %}
+
+          {% if page.highlighted %}
+            <div id="highlighted" class="highlighted-wrapper displayinb width68 floatr">
+              {{ page.highlighted }}
+            </div>
+          {% endif %}
+          
+          <div id="content" class="column displayinb width68 floatr"><div class="section">
+            <a id="main-content" tabindex="-1"></a>
+            {{ title_prefix }}
+            {% if title %}
+              <h1 class="title" id="page-title">
+                {{ title }}
+              </h1>
+            {% endif %}
+            {{ title_suffix }}
+            {% if tabs %}
+              <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
+                {{ tabs }}
+              </nav>
+            {% endif %}
+            {% if action_links %}
+              <ul class="action-links">{{ action_links }}</ul>
+            {% endif %}
+            {{ page.content }}
+          </div></div><!-- /#content -->
+
+          {% else %}
+            {% if page.help %}
+            <div class="help-wrapper displayinb width100 floatr">
+              {{ page.help }}
+            </div>
+          {% endif %}
+
+          {% if page.highlighted %}
+            <div id="highlighted" class="highlighted-wrapper displayinb width100 floatr">
+              {{ page.highlighted }}
+            </div>
+          {% endif %}
+          
+          <div id="content" class="column displayinb width100 floatr"><div class="section">
+            <a id="main-content" tabindex="-1"></a>
+            {{ title_prefix }}
+            {% if title %}
+              <h1 class="title" id="page-title">
+                {{ title }}
+              </h1>
+            {% endif %}
+            {{ title_suffix }}
+            {% if tabs %}
+              <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
+                {{ tabs }}
+              </nav>
+            {% endif %}
+            {% if action_links %}
+              <ul class="action-links">{{ action_links }}</ul>
+            {% endif %}
+            {{ page.content }}
+          </div></div><!-- /#content -->
+        {% endif %}
+
+      </div><!-- /#main -->
+    </div><!-- /#main-wrapper -->
+  </div><!-- /#page -->
+</div><!-- /#page-wrapper -->
+<div id="footer-wrapper">
+  <div class="section">
+      {% if page.footer_firstcolumn or page.footer_secondcolumn or page.footer_thirdcolumn or page.footer_fourthcolumn %}
+        <div id="footer-columns" class="clearfix width100">
+          <div class="footer-columns footer_firstcolumn_wrapper width24 floatl">
+            {{ page.footer_firstcolumn }}
+          </div>
+          <div class="footer-columns footer_secondcolumn_wrapper width24 floatl">
+            {{ page.footer_secondcolumn }}
+          </div>
+          <div class="footer-columns footer_thirdcolumn_wrapper width24 floatl">
+            {{ page.footer_thirdcolumn }}
+          </div>
+          <div class="footer-columns footer_fourthcolumn_wrapper width24 floatl">
+            {{ page.footer_fourthcolumn }}
+          </div>
+        </div><!-- /#footer-columns -->
+      {% endif %}
+      {% if page.footer %}
+        <div id="footer" class="clearfix">
+          {{ page.footer }}
+        </div>
+      {% endif %}
+  </div><!-- /.section -->
+</div><!-- /#footer-wrapper -->
